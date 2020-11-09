@@ -12,9 +12,55 @@ export const getTechs = () => async dispatch => {
         setLoading();
         const res = await fetch("/techs");
         const data = await res.json();
+        console.log(data);
         dispatch({
             type:GET_TECHS,
             payload: data
+        });
+    } catch (err) {
+        dispatch({
+            type: TECHS_ERROR,
+            payload: err.response.statusText
+        });
+    }
+}
+
+//add techs to server
+export const addTech = (tech) => async dispatch => {
+    try {
+        setLoading();
+        const res = await fetch("/techs", {
+            method: "POST",
+            body: JSON.stringify(tech),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        const data = await res.json();
+        console.log(data);
+        dispatch({
+            type:ADD_TECH,
+            payload: data
+        });
+    } catch (err) {
+        dispatch({
+            type: TECHS_ERROR,
+            payload: err.response.statusText
+        });
+    }
+}
+
+//delete tech from db
+export const deleteTech = (id) => async dispatch => {
+    try {
+        setLoading();
+        await fetch(`/techs/${id}`, {
+            method: "DELETE"
+        });
+        
+        dispatch({
+            type:DELETE_TECH,
+            payload: id
         });
     } catch (err) {
         dispatch({
